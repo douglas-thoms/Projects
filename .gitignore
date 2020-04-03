@@ -1,0 +1,5 @@
+# Ignore big zip files
+*.zip
+
+#Ignore big data files
+Energy.Predictor.2020/kaggle-data/*.csv
