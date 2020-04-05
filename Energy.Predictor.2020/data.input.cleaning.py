@@ -18,20 +18,25 @@ set up API to automatically date and download"
 
 
 
-
-buildingMetaData = pd.read_csv("kaggle-data/building_metadata.csv")
+#Input relevant files
+bMetaData = pd.read_csv("kaggle-data/building_metadata.csv")
 trainData = pd.read_csv("kaggle-data/train.csv")
 trainWeatherData = pd.read_csv("kaggle-data/weather_train.csv")
 
-bMDSample = buildingMetaData.head(100)
+#combine buildingMetaData and trainData
+combDF = pd.merge(bMetaData,trainData,how='outer',on='building_id')
+
+#trainWeatherData has irrelevant unused observations, remove observations
+keys = list(['site_id','timestamp'])
+i1 = trainWeatherData.set_index(keys).index
+i2 = combDF.set_index(keys).index
+trainWeatherData = trainWeatherData[i1.isin(i2)]
+
+#combine combDF with revised trainWeatherData
+combDF = pd.merge(combDF,trainWeatherData,how='outer',on=['site_id','timestamp'])
+
+#create samples
+bMDSample = bMetaData.head(100)
 trainSample = trainData.head(100)
 weathTrainSample = trainWeatherData.head(100)
-
-test = pd.merge(trainData,buildingMetaData,how='outer',on='building_id')
-
-test = pd.merge(test,trainWeatherData,how='outer',on='site_id')
-testSample = test.head(100)
-
-print(buildingMetaData)
-
-#Study spider reports and pweave
+combDFSample = combDF.head(100)
