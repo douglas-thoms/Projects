@@ -25,8 +25,7 @@ trainWeatherData = pd.read_csv("kaggle-data/weather_train.csv")
 
 #combine buildingMetaData and trainData
 combDF = pd.merge(bMetaData,trainData,how='outer',on='building_id')
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
 #trainWeatherData has irrelevant unused observations, remove observations
 keys = list(['site_id','timestamp'])
@@ -45,8 +44,6 @@ combDFSample = combDF.head(100)
 
 #output csv
 combDF.to_csv("data/combDF.csv", index = False)
-=======
->>>>>>> refs/remotes/origin/master
 
 #trainWeatherData has irrelevant unused observations, remove observations
 keys = list(['site_id','timestamp'])
@@ -61,13 +58,4 @@ combDF = pd.merge(combDF,trainWeatherData,how='outer',on=['site_id','timestamp']
 bMDSample = bMetaData.head(100)
 trainSample = trainData.head(100)
 weathTrainSample = trainWeatherData.head(100)
-<<<<<<< HEAD
-<<<<<<< HEAD
-combDFSample = combDF.head(100)
->>>>>>> refs/remotes/origin/master
-=======
-combDFSample = combDF.head(100)
->>>>>>> f7f80cebd592842bc6ea87358ee18a4249ccd0b9
-=======
-combDFSample = combDF.head(100)
->>>>>>> refs/remotes/origin/master
+
