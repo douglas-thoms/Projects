@@ -3,3 +3,4 @@
 
 #Ignore big data files
 Energy.Predictor.2020/kaggle-data/*.csv
+Energy.Predictor.2020/data/*.csv
