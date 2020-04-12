@@ -24,22 +24,24 @@ trainData = pd.read_csv("kaggle-data/train.csv")
 trainWeatherData = pd.read_csv("kaggle-data/weather_train.csv")
 
 #combine buildingMetaData and trainData
-combDF = pd.merge(bMetaData,trainData,how='outer',on='building_id')
-
-
-#trainWeatherData has irrelevant unused observations, remove observations
-keys = list(['site_id','timestamp'])
-i1 = trainWeatherData.set_index(keys).index
-i2 = combDF.set_index(keys).index
-trainWeatherData = trainWeatherData[i1.isin(i2)]
+combDF = pd.merge(bMetaData,trainData,how='inner',on='building_id')
 
 #combine combDF with revised trainWeatherData
-combDF = pd.merge(combDF,trainWeatherData,how='outer',on=['site_id','timestamp'])
+combDF = pd.merge(combDF,trainWeatherData,how='inner',on=['site_id','timestamp'])
 
 combDF.drop(columns = ['year_built','floor_count','cloud_coverage','precip_depth_1_hr'],
             inplace=True)
 
 combDF.dropna(inplace = True)
+
+combDF['timestamp'] = pd.to_datetime(combDF.timestamp)
+combDF['hour'] = combDF.timestamp.dt.hour
+combDF['weekday'] = combDF.timestamp.dt.dayofweek
+combDF['month'] = combDF.timestamp.dt.month
+
+
+combDF = combDF[['timestamp','hour','weekday','month', 'site_id', 'building_id', 'meter', 'meter_reading', 'primary_use', 'square_feet', 'air_temperature', 'dew_temperature', 'sea_level_pressure', 'wind_direction', 'wind_speed']]
+
 
 #output csv
 combDF.to_csv("data/combDF.csv", index = False)
@@ -49,3 +51,4 @@ bMDSample = bMetaData.head(100)
 trainSample = trainData.head(100)
 weathTrainSample = trainWeatherData.head(100)
 combDFSample = combDF.head(100)
+
