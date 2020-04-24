@@ -39,6 +39,7 @@ combDF['hour'] = combDF.timestamp.dt.hour
 combDF['weekday'] = combDF.timestamp.dt.dayofweek
 combDF['month'] = combDF.timestamp.dt.month
 
+#dmap metering points, day of week
 
 combDF = combDF[['timestamp','hour','weekday','month', 'site_id', 'building_id', 'meter', 'meter_reading', 'primary_use', 'square_feet', 'air_temperature', 'dew_temperature', 'sea_level_pressure', 'wind_direction', 'wind_speed']]
 
