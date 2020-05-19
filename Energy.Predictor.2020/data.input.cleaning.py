@@ -23,29 +23,53 @@ bMetaData = pd.read_csv("kaggle-data/building_metadata.csv")
 trainData = pd.read_csv("kaggle-data/train.csv")
 trainWeatherData = pd.read_csv("kaggle-data/weather_train.csv")
 
+#remove outlier
+trainData = trainData[(trainData.building_id != 1099) | (trainData.meter != 'steam')]
+
+#breakdown timestamp
+trainData['timestamp'] = pd.to_datetime(trainData.timestamp)
+trainWeatherData['timestamp'] = pd.to_datetime(trainWeatherData.timestamp)
+trainWeatherData['hour'] = trainWeatherData.timestamp.dt.hour
+trainWeatherData['weekday'] = trainWeatherData.timestamp.dt.dayofweek
+trainWeatherData['month'] = trainWeatherData.timestamp.dt.month
+
+#dmap metering points, day of week
+weekdayName = {0:'Monday',1:'Tuesday',2:'Wednesday',3:'Thursday',4:'Friday',5:'Saturday',6:'Sunday'}
+trainWeatherData['weekday'] = trainWeatherData['weekday'].map(weekdayName)
+monthName = {1:'Jan',2:'Feb',3:'Mar',4:'April',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'}
+trainWeatherData['month'] = trainWeatherData['month'].map(monthName)
+meterName = {0: 'electricity', 1: 'chilledwater', 2: 'steam', 3: 'hotwater'}
+trainData['meter'] = trainData['meter'].map(meterName)
+
 #combine buildingMetaData and trainData
 combDF = pd.merge(bMetaData,trainData,how='inner',on='building_id')
 
 #combine combDF with revised trainWeatherData
 combDF = pd.merge(combDF,trainWeatherData,how='inner',on=['site_id','timestamp'])
 
-combDF.drop(columns = ['year_built','floor_count','cloud_coverage','precip_depth_1_hr'],
+combDF.drop(columns = ['year_built','floor_count','cloud_coverage'],
             inplace=True)
 
 combDF.dropna(inplace = True)
 
-combDF['timestamp'] = pd.to_datetime(combDF.timestamp)
-combDF['hour'] = combDF.timestamp.dt.hour
-combDF['weekday'] = combDF.timestamp.dt.dayofweek
-combDF['month'] = combDF.timestamp.dt.month
+#remove following meters because of bad data
+combDF.drop(combDF[(combDF['building_id'] == 1099) & (combDF['meter'] == 'steam')].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 778) & (combDF['meter'] == 'chilledwater')].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1021) & (combDF['meter'] == 'hotwater')].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1168) & (combDF['meter'] == 'steam')].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1197) & (combDF['meter'] == 'steam')].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1148) & (combDF['meter'] == 'steam')].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1159) & (combDF['meter'] == 'steam')].index,inplace=True)
 
-#dmap metering points, day of week
 
 combDF = combDF[['timestamp','hour','weekday','month', 'site_id', 'building_id', 'meter', 'meter_reading', 'primary_use', 'square_feet', 'air_temperature', 'dew_temperature', 'sea_level_pressure', 'wind_direction', 'wind_speed']]
 
 
 #output csv
 combDF.to_csv("data/combDF.csv", index = False)
+# trainWeatherData.to_csv("data/trainWeatherData.csv", index = False)
+# trainData.to_csv("data/trainData.csv", index = False)
+# bMetaData.to_csv("data/bMetaData.csv", index = False)
 
 #create samples
 bMDSample = bMetaData.head(100)
