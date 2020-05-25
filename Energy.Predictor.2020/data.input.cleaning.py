@@ -7,6 +7,8 @@ Input of data
 
 import numpy as np
 import pandas as pd
+import dask.dataframe as dd
+
 
 """
 Input Data
@@ -16,30 +18,36 @@ Input Data
 set up API to automatically date and download"
 """
 
+#set up dask
+from dask.distributed import Client
+client = Client(n_workers=4)
+
+
 
 
 #Input relevant files
-bMetaData = pd.read_csv("kaggle-data/building_metadata.csv")
-trainData = pd.read_csv("kaggle-data/train.csv")
-trainWeatherData = pd.read_csv("kaggle-data/weather_train.csv")
+bMetaData = dd.read_csv("kaggle-data/building_metadata.csv")
+trainData = dd.read_csv("kaggle-data/train.csv")
+trainWeatherData = dd.read_csv("kaggle-data/weather_train.csv")
 
 #remove outlier
-trainData = trainData[(trainData.building_id != 1099) | (trainData.meter != 'steam')]
+
 
 #breakdown timestamp
-trainData['timestamp'] = pd.to_datetime(trainData.timestamp)
-trainWeatherData['timestamp'] = pd.to_datetime(trainWeatherData.timestamp)
+trainData['timestamp'] = dd.to_datetime(trainData.timestamp)
+trainWeatherData['timestamp'] = dd.to_datetime(trainWeatherData.timestamp)
 trainWeatherData['hour'] = trainWeatherData.timestamp.dt.hour
 trainWeatherData['weekday'] = trainWeatherData.timestamp.dt.dayofweek
 trainWeatherData['month'] = trainWeatherData.timestamp.dt.month
 
+#REMOVE DMAPPING HERE MOVE TO EDA
 #dmap metering points, day of week
-weekdayName = {0:'Monday',1:'Tuesday',2:'Wednesday',3:'Thursday',4:'Friday',5:'Saturday',6:'Sunday'}
-trainWeatherData['weekday'] = trainWeatherData['weekday'].map(weekdayName)
-monthName = {1:'Jan',2:'Feb',3:'Mar',4:'April',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'}
-trainWeatherData['month'] = trainWeatherData['month'].map(monthName)
-meterName = {0: 'electricity', 1: 'chilledwater', 2: 'steam', 3: 'hotwater'}
-trainData['meter'] = trainData['meter'].map(meterName)
+#weekdayName = {0:'Monday',1:'Tuesday',2:'Wednesday',3:'Thursday',4:'Friday',5:'Saturday',6:'Sunday'}
+#trainWeatherData['weekday'] = trainWeatherData['weekday'].map(weekdayName)
+#monthName = {1:'Jan',2:'Feb',3:'Mar',4:'April',5:'May',6:'Jun',7:'Jul',8:'Aug',9:'Sep',10:'Oct',11:'Nov',12:'Dec'}
+#trainWeatherData['month'] = trainWeatherData['month'].map(monthName)
+#meterName = {0: 'electricity', 1: 'chilledwater', 2: 'steam', 3: 'hotwater'}
+#trainData['meter'] = trainData['meter'].map(meterName)
 
 #combine buildingMetaData and trainData
 combDF = pd.merge(bMetaData,trainData,how='inner',on='building_id')
@@ -52,15 +60,16 @@ combDF.drop(columns = ['year_built','floor_count','cloud_coverage'],
 
 combDF.dropna(inplace = True)
 
+#NEED FUNCTION
 #remove following meters because of bad data
-combDF.drop(combDF[(combDF['building_id'] == 1099) & (combDF['meter'] == 'steam')].index,inplace=True)
-combDF.drop(combDF[(combDF['building_id'] == 778) & (combDF['meter'] == 'chilledwater')].index,inplace=True)
-combDF.drop(combDF[(combDF['building_id'] == 1021) & (combDF['meter'] == 'hotwater')].index,inplace=True)
-combDF.drop(combDF[(combDF['building_id'] == 1168) & (combDF['meter'] == 'steam')].index,inplace=True)
-combDF.drop(combDF[(combDF['building_id'] == 1197) & (combDF['meter'] == 'steam')].index,inplace=True)
-combDF.drop(combDF[(combDF['building_id'] == 1148) & (combDF['meter'] == 'steam')].index,inplace=True)
-combDF.drop(combDF[(combDF['building_id'] == 1159) & (combDF['meter'] == 'steam')].index,inplace=True)
-
+combDF.drop(combDF[(combDF['building_id'] == 1099) & (combDF['meter'] == 2)].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 778) & (combDF['meter'] == 1)].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1021) & (combDF['meter'] == 3)].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1168) & (combDF['meter'] == 2)].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1197) & (combDF['meter'] == 2)].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1148) & (combDF['meter'] == 2)].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1159) & (combDF['meter'] == 2)].index,inplace=True)
+combDF.drop(combDF[(combDF['building_id'] == 1099) & (combDF['meter'] == 2)].index,inplace=True)
 
 combDF = combDF[['timestamp','hour','weekday','month', 'site_id', 'building_id', 'meter', 'meter_reading', 'primary_use', 'square_feet', 'air_temperature', 'dew_temperature', 'sea_level_pressure', 'wind_direction', 'wind_speed']]
 
