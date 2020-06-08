@@ -3,6 +3,8 @@
 Created on Sun May 24 22:30:09 2020
 
 @author: dthoms
+
+This file simply inputs all the files and joins them
 """
 
 import numpy as np
