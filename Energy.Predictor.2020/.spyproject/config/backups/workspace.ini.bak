@@ -6,5 +6,5 @@ save_non_project_files = False
 
 [main]
 version = 0.2.0
-recent_files = ['..\\..\\..\\..\\.spyder-py3\\temp.py', 'data.cleaning.iter1.py', 'create_COmbDF.py', 'feature_eng_iter1.py', '..\\..\\..\\..\\appdata\\local\\continuum\\anaconda3\\lib\\site-packages\\pandas\\core\\window\\rolling.py']
+recent_files = ['..\\..\\..\\..\\.spyder-py3\\temp.py', 'create_COmbDF.py', 'feature_eng_iter1.py', 'data_cleaning_iter1_samp.py', 'data_cleaning_iter1.py', 'functions.py']
 
