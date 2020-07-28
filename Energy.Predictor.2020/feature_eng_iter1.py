@@ -28,7 +28,6 @@ df['meter'] = df['meter'].map(meterName)
 """
 CREATE WIND DIRECTION VALUES
 """
-print(df['wind_direction'].unique())
 df['wind_compass'] = df['wind_direction'].apply(lambda x:functions.wind_direction(x))
 df.drop(['wind_direction'],axis=1,inplace=True)
 
@@ -41,6 +40,15 @@ CONSOLIDATE PRIMARY USE
 y = ["Education","Office","Lodging/residential","Entertainment/public assembly",\
      "Public services","Healthcare","Other"]
 df['primary_use'] = df['primary_use'].apply(lambda x: "Other" if x not in y else x  )
+
+"""
+CREATE CDD and HDD
+"""
+#assume CDD set point 24
+#assume HDD set point 18
+
+df['HDD'] = df['air_temperature'].apply(lambda x: functions.HDD(x))
+df['CDD'] = df['air_temperature'].apply(lambda x: functions.CDD(x))
 
 """
 OUTPUT NON-DUMMY VERSION

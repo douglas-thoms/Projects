@@ -47,3 +47,19 @@ def wind_direction(x):
         return "West"
     else:
         return "Northwest"
+    
+#create HDD feature    
+def HDD(x):
+    dd = 18-x
+    if dd>0:
+        return dd
+    else:
+        return 0
+    
+#create CDD feature    
+def CDD(x):
+    dd = x-24
+    if dd>0:
+        return dd
+    else:
+        return 0

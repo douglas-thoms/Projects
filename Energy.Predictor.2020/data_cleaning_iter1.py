@@ -57,7 +57,7 @@ bad_meters = pd.merge(bad_meters, too_low_hotwater, how='outer')
 bMetaData.drop(columns = ['year_built','floor_count'],
             inplace=True)
 
-#functions.remove_building_meter(trainData, bad_meters)
+functions.remove_building_meter(trainData, bad_meters)
 
 
 #Create rolling average to remove spike
