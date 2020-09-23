@@ -17,9 +17,20 @@ shinyServer(function(input, output) {
         peak = read.csv("~/Training/Projects/template/shiny.dashboard.template/peak.hours.data.csv")
         filtered.peak <- reactive({
                 peak %>%
-                        filter((ISO %in% input$iso) & (top20.actual.peak.day == 1) & (actual.peak.hour == 1)) 
+                        filter((ISO %in% input$iso) & 
+                                       (top20.actual.peak.day == 1) & (actual.peak.hour == 1)) 
                         
    })   
+        top.peaks <- reactive({
+                peak %>%
+                        filter(
+                                (annual.actual.load.rank <= input$num) & 
+                                       (ISO %in% input$iso) & (actual.peak.hour==1) &
+                                (year == input$year) & (forecaster == input$forecaster)
+                                ) %>%
+                        select(date,year,hour.start,annual.actual.load.rank,annual.same.day.forecast.load.rank,hit)
+   })  
+        
         graph.data = read.csv("~/Training/Projects/template/shiny.dashboard.template/peak.captured.summary.csv")
         filtered.graph.data <- reactive({
                 graph.data %>%
@@ -34,4 +45,6 @@ shinyServer(function(input, output) {
                 ggplot(data=filtered.graph.data(),aes(x=ISO,y=Number.of.Peaks.Captured,fill=Forecaster)) +
                         geom_bar(stat='identity', position='dodge') + facet_wrap(~Year)
         }))
+        
+        output$table <- renderDataTable(top.peaks())
 })

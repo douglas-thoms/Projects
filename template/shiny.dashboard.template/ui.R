@@ -10,29 +10,54 @@
 library(shiny)
 library(shinydashboard)
 
+#new goal - 10 peak table comparison, can chose actual or forecast
+
 # Define UI for application that draws a histogram
 shinyUI(
+                
+        
+        
         dashboardPage(
-                dashboardHeader(title="US Market"),
+                dashboardHeader(title="Controls"),
                 dashboardSidebar(
                         
-                        menuItem("ISO"),
-                                menuSubItem(selectInput("iso", "Choose an ISO:",
+                        menuItem(selectInput("iso", "Choose an ISO:",
                                                         c("ISONE" = "ISONE",
                                                           "NYISO" = "NYISO",
-                                                          "PJM" = "PJM")))
+                                                          "PJM" = "PJM"))),
+                        menuItem("Select parameters for table"),
+                                menuSubItem(selectInput("year", "Year:",
+                                                        c("2017" = "2017",
+                                                          "2018" = "2018",
+                                                          "2019" = "2019",
+                                                          "2020" = "2020"))),
+                        
+                                menuSubItem(numericInput("num", "Number of peaks", 
+                                                         10, min = 1, max = 20)),
+                        
+                        
+                                menuSubItem(selectInput("forecaster", "Forecaster:",
+                                                        c("Enverus" = "enverus",
+                                                          "Genscape" = "genscape")))
+                        
+
 
                                 
                 ),
                 dashboardBody(
-                        fluidRow(
-                                box(plotOutput("barplot1")),
-                        fluidRow(
-                                box(plotOutput("barplot2"))
+                        fluidPage( titlePanel("US Markets"),
+                                fluidRow(
+                                        box(plotOutput("barplot1")),
+                                        box(plotOutput("barplot2"))
+                                ),
+                                
+                                fluidRow(
+                                        dataTableOutput('table'))
+                        
                         )
-                )
-        )
 
-        )
+       )
 
+   )
+   
 )
