@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1601335777890.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "8F64E2F7",
+    "lastKnownWriteTime" : 1601339791,
+    "last_content_update" : 1601339791382,
+    "path" : "~/Training/Projects/template/shiny.dashboard.template/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+        "cursorPosition" : "38,69",
+        "scrollLine" : "14"
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -1,0 +1,9 @@
+{
+    "path" : "~/Training/Projects/template/shiny.dashboard.template",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}
