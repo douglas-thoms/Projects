@@ -5,15 +5,15 @@
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "2474072622",
+    "hash" : "0",
     "id" : "8F64E2F7",
     "lastKnownWriteTime" : 1601339791,
     "last_content_update" : 1601339791382,
     "path" : "~/Training/Projects/template/shiny.dashboard.template/server.R",
     "project_path" : "server.R",
     "properties" : {
-        "cursorPosition" : "38,69",
-        "scrollLine" : "14"
+        "cursorPosition" : "34,40",
+        "scrollLine" : "10"
     },
     "relative_order" : 1,
     "source_on_save" : false,
